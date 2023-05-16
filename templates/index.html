@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+<!--    <script type="text/javascript" src="https://otpless.com/auth.js"></script>-->
+<script>
+  function handleCredentialResponse(response) {
+     // decodeJwtResponse() is a custom function defined by you
+     // to decode the credential response.
+     const responsePayload =response.credential
+
+     console.log("ID: " +responsePayload);
+  }
+</script>
+    <title>Title</title>
+</head>
+<body>
+    <div id="g_id_onload"
+     data-client_id="967415596712-smvorb7qlshd55kase8jkobouulroem7.apps.googleusercontent.com"
+     data-callback="handleCredentialResponse">
+</div>
+</body>
+</html>

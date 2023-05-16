@@ -1,0 +1,290 @@
+{
+	"info": {
+		"_postman_id": "9c4e1b30-014a-4e2e-adbd-a633f6816ad3",
+		"name": "Exercise Data",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26882543"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"dhruv@gmail.com\",\n    \"password\":12345,\n    \"password2\":12345,\n    \"name\": \"DHRUV\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/accounts/register/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"accounts",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "google auth",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgyMTQ1MDI4LCJpYXQiOjE2ODIxNDM4MjgsImp0aSI6ImQ4ZTczNTJhZGYwNTQyOGRhZjM3ZTZkOTc0ODJhZDI2IiwidXNlcl9pZCI6MTN9.gVrVXJTEmac05R8GKFZZPLGo42Q8lZJhjKfW1JQDGpE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"auth_token\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg2OTY5YWVjMzdhNzc4MGYxODgwNzg3NzU5M2JiYmY4Y2Y1ZGU1Y2UiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2ODIxNDM0OTIsImF1ZCI6Ijk2NzQxNTU5NjcxMi1zbXZvcmI3cWxzaGQ1NWthc2U4amtvYm91dWxyb2VtNy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjExNjMxODI0MjM3NzkwNjU1MDI4MyIsImVtYWlsIjoiZGhydXZwYXRlbDExNDg4QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhenAiOiI5Njc0MTU1OTY3MTItc212b3JiN3Fsc2hkNTVrYXNlOGprb2JvdXVscm9lbTcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJuYW1lIjoiRGhydXYgUGF0ZWwiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUdObXl4Wk5qSllPenpfdVFsZnd2NEg0a0hhVWtBeERicjBMZkdzUXJ3Tm09czk2LWMiLCJnaXZlbl9uYW1lIjoiRGhydXYiLCJmYW1pbHlfbmFtZSI6IlBhdGVsIiwiaWF0IjoxNjgyMTQzNzkyLCJleHAiOjE2ODIxNDczOTIsImp0aSI6ImVmMWFiZWIyODcyYjRlNGZkMzYxMWMxZDhjZGEzNTdiOWFlYWNhNWYifQ.L5cNbnywf-jwhuOGB6cJQbOXyXyDvGFP-axT4zrCKvIGkj2KriukojyPFy1t858u-tzgqaaC1NdeEZXVbXOu0NwVVi-S6ogNxXAm26DgcP-p-A1COWT3xgRQwXhkYeecQTyT4z-oTPb82wMntpr4bfyVvFbAKiBPpV8JYWuDe2JMouQkrZMZ_s3yqyji_ITMNwKgtcx2ga8d3QeK6-W9dRUGY760E-44cqcZkRiXvLqFfrIsZxu18xDWXMCqzCERFjcaAopYJ5YdfRZKh7Y3sgKfMQQFCbpf_wVtNs65zFOBpRVQgDHCLY2uaQhWR8tt-HNRcKMTRofgg0mA3a9kZw\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/accounts/google/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"accounts",
+								"google",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"dhruv@gmail.com\",\n    \"password\":12345\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/accounts/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"accounts",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "exercises",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/exercises/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"exercises",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "single exercise",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/exercises/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"exercises",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bodyparts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/exercises/bodyparts/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"exercises",
+						"bodyparts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "favourite",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/favourites?user_id=1&action=remove&ex_id=26",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"favourites"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "1"
+						},
+						{
+							"key": "action",
+							"value": "remove"
+						},
+						{
+							"key": "ex_id",
+							"value": "26"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter Exercise by Bodyparts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgyMTY0NDQ4LCJpYXQiOjE2ODIxNjMyNDgsImp0aSI6ImM3NWYwOGU4NjM4MzRhZjRiNDkyZTBiNmE0MDI4NWViIiwidXNlcl9pZCI6NX0.MYikKWiQlZP_DlnMQjeoYoTI24IRn9oq9dV48ypZQ_I",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/exercises/bodyparts/upper legs",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"exercises",
+						"bodyparts",
+						"upper legs"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
