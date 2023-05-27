@@ -13,10 +13,10 @@ urlpatterns = [
     path('exercises/bodyparts/<bodypart>', FilterBodyPartAPIView.as_view()),
     path('exercises/filter/', FilterTarget.as_view()),
     path('exercises/<int:id>/',ExerciseAPIView.as_view()),
-    path('favourites/',FavouritesAPIView.as_view()),
+    path('exercises/favourites/',FavouritesAPIView.as_view()),
     path('workshops/rooms/', AllRooms.as_view()),
     path('workshops/room-code/<role>/<roomId>',GetRoomCode.as_view()),
-    path('exercise-plan/generate/', ExercisePlanGeneratorAPIView.as_view(), name='exercise-plan-generate'),
+    path('exercises/exercise-plan/generate/', ExercisePlanGeneratorAPIView.as_view(), name='exercise-plan-generate'),
 
     # path('favourites/remove/',remove_from_fav)
 ]

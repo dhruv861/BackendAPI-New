@@ -10712,29 +10712,40 @@ class GetRoomCode(APIView):
 
 class ExercisePlanGeneratorAPIView(APIView):
     EXERCISES_PER_DAY = 5
-    DAYS_IN_WEEK = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-    REST_DAYS = ['saturday', 'sunday']
-    RECENTLY_SELECTED_LIMIT = 10  # Number of previous workouts to consider for randomization constraint
+    DAYS_IN_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    REST_DAYS = []
+    RECENTLY_SELECTED_LIMIT = 20  # Number of previous workouts to consider for randomization constraint
 
     def post(self, request, format=None):
         user_preferences = request.data.get('preferences', {})
         print(user_preferences)
+        self.EXERCISES_PER_DAY = user_preferences["workoutTime"]//15
         exercise_plan = self.generate_exercise_plan(user_preferences)
-        serializer =ExerciseSerializer(exercise_plan)
-        # print("1",exercise_plan)
+        # serializer =ExerciseSerializer(exercise_plan)
+        # # print("1",exercise_plan)
         return Response(exercise_plan)
 
     def generate_exercise_plan(self, user_preferences):
         exercise_plan = {}
 
+
         for day in self.DAYS_IN_WEEK:
+            if day not in user_preferences["days"]:
+                self.REST_DAYS.append(day)
+
+        print(self.REST_DAYS)
+
+        if (len(user_preferences["days"]) == 7):
+            print(self.REST_DAYS)
+            self.REST_DAYS.append("Sunday")
+
+        for day in user_preferences["days"]:
             if day in self.REST_DAYS:
                 exercise_plan[day] = []
             else:
                 data=self.select_exercises(user_preferences)
                 serializer = ExerciseSerializer(data,many=True)
                 exercise_plan[day] = serializer.data
-        # print("2",exercise_plan)
         return exercise_plan
 
     def select_exercises(self, user_preferences):
@@ -10742,9 +10753,9 @@ class ExercisePlanGeneratorAPIView(APIView):
         recently_selected_exercises = self.get_recently_selected_exercises()
 
         # Apply filters based on user preferences
-        # if 'equipment' in user_preferences:
-        #     exercises = exercises.filter(equipment=user_preferences['equipment'])
-        #     print("EQUIPMENT",exercises)
+        if 'equipment' in user_preferences:
+            exercises = exercises.filter(equipment=user_preferences['equipment'])
+            print("EQUIPMENT",exercises.count())
 
         if 'body_parts' in user_preferences:
             bodypart_exercises = exercises.filter(bodyPart=user_preferences['body_parts'])
@@ -10769,31 +10780,24 @@ class ExercisePlanGeneratorAPIView(APIView):
         }
 
         # Select exercises based on weighted scores and randomization constraint
+        filtered_exercises = self.filter_exercises_by_randomization(exercises, recently_selected_exercises)
+        if not filtered_exercises:
+            return []
+        scored_exercises = self.assign_scores(filtered_exercises, weights)
+
         selected_exercises = []
         for _ in range(self.EXERCISES_PER_DAY):
-            filtered_exercises = self.filter_exercises_by_randomization(exercises, recently_selected_exercises)
-            if not filtered_exercises:
-                break
-
-            scored_exercises = self.assign_scores(filtered_exercises, weights)
-            exercise = self.select_random_exercise(scored_exercises)
-            print(type(exercise))
+            exercise = self.select_exercise(scored_exercises)
             selected_exercises.append(exercise)
-            print("selected exercise",type(selected_exercises))
             # Create a new entry in the RecentlySelectedExercise table
             RecentlySelectedExercise.objects.create(exercise=exercise)
-            # for exercise in selected_exercises:
-            #
-            #     print(type(exercise))
+
 
         return [exercise for exercise in selected_exercises]
 
     def get_recently_selected_exercises(self):
-        # Retrieve the recently selected exercises from storage (e.g., database, cache)
-        # Return a list of exercise names or exercise objects
         recently_selected = RecentlySelectedExercise.objects.order_by('-timestamp')[:self.RECENTLY_SELECTED_LIMIT]
         print( "Recently",recently_selected.count())
-        # print("5",[recently.exercise.name for recently in recently_selected])
         return [recently.exercise.name for recently in recently_selected]
     def filter_exercises_by_randomization(self, exercises, recently_selected_exercises):
         # Filter exercises to exclude the ones present in the recently selected exercises
@@ -10808,31 +10812,15 @@ class ExercisePlanGeneratorAPIView(APIView):
             score = 0
             if exercise.target in weights:
                 score += weights[exercise.target]
-                # print("--->",exercise.target,score)
             if exercise.bodyPart in weights:
                 score += weights[exercise.bodyPart]
-                # print("------->>",exercise.bodyPart,score)
             scored_exercises.append((exercise, score))
-            # print("------->>",exercise.target)
-            # for muscle_group in exercise.target.split(','):
-            #     muscle_group = muscle_group.strip()
-            #     if muscle_group in weights:
-            #         score += weights[muscle_group]
-            # scored_exercises.append((exercise, score))
-        # print("Scored",scored_exercises[:10])
         return scored_exercises
 
-    def select_random_exercise(self, scored_exercises):
-        # Select a random exercise from the scored exercises based on their scores
-        total_score = sum(score for _, score in scored_exercises)
-        random_value = random.uniform(0, total_score)
-        cumulative_score = 0
 
-        for exercise, score in scored_exercises:
-            cumulative_score += score
-            if cumulative_score >= random_value:
-                # print("8",exercise)
-                return exercise
-
-        # If for some reason the exercise is not selected, return None
-        return None
+    def select_exercise(self,scores):
+        total_score = sum(score for exercise, score in scores)
+        weighted_choices = [(exercise, score / total_score) for exercise, score in scores]
+        selected_exercise = random.choices(population=[exercise for exercise, _ in scores],
+                                           weights=[weight for _, weight in weighted_choices])[0]
+        return selected_exercise
