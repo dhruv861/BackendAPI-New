@@ -50,8 +50,6 @@ class Exercise(models.Model):
         return self.name
 
 
-
-
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     subscription_choices = [
         ("Free", "Free"),
@@ -106,7 +104,10 @@ class RecentlySelectedExercise(models.Model):
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-
+class ExercisePlan(models.Model):
+    date = models.DateField(auto_now_add=True)
+    user = models.ForeignKey(CustomUser,on_delete=models.PROTECT,unique=True)
+    plan = models.TextField()
 # for ex in data:
 #     Exercises.objects.create(name=ex["name"], bodyPart=ex["bodyPart"], target=ex["target"], equipment=ex["equipment"],
 #                              gifUrl=ex["gifUrl"])

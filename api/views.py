@@ -3,7 +3,7 @@ import uuid
 import datetime
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from core.models import Exercise,CustomUser,RecentlySelectedExercise
+from core.models import Exercise,CustomUser,RecentlySelectedExercise,ExercisePlan
 import json
 from rest_framework.permissions import IsAuthenticated
 from .serializers import ExerciseSerializer, BodyPartSerializer,WorkshopSerializer
@@ -10678,6 +10678,7 @@ class FavouritesAPIView(APIView):
             return Response({"exercises": serializers.data,
                              "message": "Removed from Favourites"})
 
+
 def getManagementToken():
     app_access_key = '6448d35895f194d5e50971ea'
     app_secret = 'kLJgbkn6irHI9I2O4veVzK9bYPPFTX2FjHwoPkjaDEAqR-swPS1eTUNgl2bl46LdxCPrnagZ-OyQL4jFFM79olzntQHsWje8Q2qc10h27FFpSrtGAYXGqFMKSgeBdzByjKZUzbI0xm9afGUfdYT16P3QLtc8Y8G1x7J2ekdvsXA='
@@ -10695,6 +10696,8 @@ def getManagementToken():
     }, key=app_secret)
 
     return token
+
+
 class AllRooms(APIView):
     def get(self,request):
         rooms = Workshop.objects.all()
@@ -10703,12 +10706,14 @@ class AllRooms(APIView):
         # # print(r.text)
         return Response({"rooms":serializers.data})
 
+
 class GetRoomCode(APIView):
     def get(self,request,role,roomId):
         token=getManagementToken()
         r= httpx.post(f"https://api.100ms.live/v2/room-codes/room/{roomId}/role/{role}" ,headers={"Authorization": f'Bearer {token}'})
         print(r.json())
         return Response(r.json())
+
 
 class ExercisePlanGeneratorAPIView(APIView):
     EXERCISES_PER_DAY = 5
@@ -10824,3 +10829,24 @@ class ExercisePlanGeneratorAPIView(APIView):
         selected_exercise = random.choices(population=[exercise for exercise, _ in scores],
                                            weights=[weight for _, weight in weighted_choices])[0]
         return selected_exercise
+
+
+class ExercisePlanByUser(APIView):
+    def post(self,request):
+        exercise_plan_json = json.dumps(request.data.get("plan"))
+
+        if ExercisePlan.objects.filter(user=request.user).exists():
+            exercise_plan = ExercisePlan.objects.get(user=request.user)
+            exercise_plan.plan = exercise_plan_json
+            exercise_plan.save()
+            return Response("Exercise Plan Updated and Saved")
+        else:
+            ExercisePlan.objects.create(user=request.user, plan=exercise_plan_json)
+            return Response("Exercise Plan Saved")
+
+    def get(self,request):
+
+        if ExercisePlan.objects.filter(user=request.user).exists():
+            exercise_plan = ExercisePlan.objects.get(user=request.user)
+            response = json.loads(exercise_plan.plan)
+            return Response(response)

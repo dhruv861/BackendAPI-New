@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import SendPasswordResetEmailView, UserChangePasswordView, UserLoginView, UserProfileView, UserRegistrationView, UserPasswordResetView,GoogleSocialAuthView
-from api.views import FavouritesAPIView
+from api.views import FavouritesAPIView,ExercisePlanByUser
 
 urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='register'),
@@ -10,5 +10,6 @@ urlpatterns = [
     path('send-reset-password-email/', SendPasswordResetEmailView.as_view(), name='send-reset-password-email'),
     path('reset-password/<uid>/<token>/', UserPasswordResetView.as_view(), name='reset-password'),
     path('google/', GoogleSocialAuthView.as_view()),
-    path('exercises/favourites/',FavouritesAPIView.as_view())
+    path('exercises/favourites/',FavouritesAPIView.as_view()),
+    path('exercise-plan/save/', ExercisePlanByUser.as_view())
 ]
