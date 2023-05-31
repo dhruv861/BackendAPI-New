@@ -21,6 +21,7 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'Workshops',
     'django_filters',
     'rest_framework_simplejwt',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -184,7 +186,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 EMAIL_USE_TLS = True
-
 
 PASSWORD_RESET_TIMEOUT=900
 

@@ -1,3 +1,4 @@
+import os
 import jwt
 import uuid
 import datetime
@@ -5,10 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from core.models import Exercise,CustomUser,RecentlySelectedExercise,ExercisePlan
 import json
-from rest_framework.permissions import IsAuthenticated
 from .serializers import ExerciseSerializer, BodyPartSerializer,WorkshopSerializer
-from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.decorators import user_passes_test
 from rest_framework import generics
 from rest_framework.views import APIView
 from django_filters import rest_framework as filters
@@ -10641,7 +10639,6 @@ class FilterTarget(generics.ListAPIView):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('target','bodyPart','equipment')
 
-
 class BodyPartsAPIView(APIView):
     def get(self, request):
         bodyParts = []
@@ -10651,7 +10648,6 @@ class BodyPartsAPIView(APIView):
         for item in data:
             bodyParts.append(item["bodyPart"])
         return Response(bodyParts)
-
 
 class FavouritesAPIView(APIView):
     def get(self,request):
@@ -10678,10 +10674,9 @@ class FavouritesAPIView(APIView):
             return Response({"exercises": serializers.data,
                              "message": "Removed from Favourites"})
 
-
 def getManagementToken():
-    app_access_key = '6448d35895f194d5e50971ea'
-    app_secret = 'kLJgbkn6irHI9I2O4veVzK9bYPPFTX2FjHwoPkjaDEAqR-swPS1eTUNgl2bl46LdxCPrnagZ-OyQL4jFFM79olzntQHsWje8Q2qc10h27FFpSrtGAYXGqFMKSgeBdzByjKZUzbI0xm9afGUfdYT16P3QLtc8Y8G1x7J2ekdvsXA='
+    app_access_key = os.environ.get('MS_ACCESS_KEY')
+    app_secret = os.environ.get('MS_APP_SECRET')
     expires = 24 * 3600
     now = datetime.datetime.utcnow()
     exp = now + datetime.timedelta(seconds=expires)
@@ -10733,23 +10728,25 @@ class ExercisePlanGeneratorAPIView(APIView):
     def generate_exercise_plan(self, user_preferences):
         exercise_plan = {}
 
-
-        for day in self.DAYS_IN_WEEK:
-            if day not in user_preferences["days"]:
-                self.REST_DAYS.append(day)
-
-        print(self.REST_DAYS)
+        # for day in self.DAYS_IN_WEEK:
+        #     if day not in user_preferences["days"]:
+        #         self.REST_DAYS.append(day)
+        #
+        # print("RESTTTTTTTTTTTTTT",self.REST_DAYS)
 
         if (len(user_preferences["days"]) == 7):
             print(self.REST_DAYS)
             self.REST_DAYS.append("Sunday")
 
         for day in user_preferences["days"]:
+            print("RESTTTTTTTTTTT",self.REST_DAYS)
+            print("USERRRRRRRRRRR",user_preferences["days"])
             if day in self.REST_DAYS:
                 exercise_plan[day] = []
             else:
                 data=self.select_exercises(user_preferences)
                 serializer = ExerciseSerializer(data,many=True)
+                print(day,serializer.data)
                 exercise_plan[day] = serializer.data
         return exercise_plan
 

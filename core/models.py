@@ -56,14 +56,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ("Gold", "Gold"),
         ("Platinum", "Platinum")
     ]
+    gender_choices = [("M","Male"),("F","Female"),("O","Others")]
     name = models.CharField(max_length=50, default='Anonymous')
     email = models.EmailField(max_length=100, unique=True)
+    gender = models.CharField(choices=gender_choices, max_length=50)
+    age = models.IntegerField()
+    height = models.FloatField()
+    weight = models.FloatField()
     subscription = models.CharField(choices=subscription_choices, max_length=100)
     address = models.TextField()
     City = models.CharField(max_length=50)
     admin = models.BooleanField(default=False)
-    # gymOwner = models.OneToOneField(Gym,on_delete=models.CASCADE,null=True)
-    Trainer = models.BooleanField(default=False)
     favourites= models.ManyToManyField(Exercise)
 
     username = None

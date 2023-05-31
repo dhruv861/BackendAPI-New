@@ -49,7 +49,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     favourites = ExerciseSerializer(read_only=True, many=True)
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'name','City','favourites']
+        fields = ['id', 'email', 'name','City','favourites','age','height','weight','gender']
 
 
 class UserChangePasswordSerializer(serializers.Serializer):
