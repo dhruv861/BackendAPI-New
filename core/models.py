@@ -1,11 +1,5 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
-
-# Create your models here.
 
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password=None,password2=None):
@@ -38,7 +32,6 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
 class Exercise(models.Model):
     name = models.CharField(max_length=100)
     bodyPart = models.CharField(max_length=100)
@@ -48,7 +41,6 @@ class Exercise(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     subscription_choices = [
@@ -107,10 +99,18 @@ class RecentlySelectedExercise(models.Model):
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-class ExercisePlan(models.Model):
+class UserPlan(models.Model):
     date = models.DateField(auto_now_add=True)
     user = models.ForeignKey(CustomUser,on_delete=models.PROTECT,unique=True)
-    plan = models.TextField()
+    exercise_plan = models.TextField()
+    meal_plan = models.TextField()
 # for ex in data:
 #     Exercises.objects.create(name=ex["name"], bodyPart=ex["bodyPart"], target=ex["target"], equipment=ex["equipment"],
 #                              gifUrl=ex["gifUrl"])
+class Queries(models.Model):
+    date = models.DateField(auto_now_add=True)
+    name = models.CharField(max_length=100,default="Anonymous")
+    email = models.CharField(max_length=100)
+    phone = models.CharField(max_length=10)
+    subject = models.CharField(max_length=100)
+    message = models.TextField()

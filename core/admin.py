@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Exercise,CustomUser,Gym,Favourite,RecentlySelectedExercise,ExercisePlan
+from .models import *
 # Register your models here.
 
 admin.site.register(Exercise)
@@ -7,4 +7,5 @@ admin.site.register(CustomUser)
 admin.site.register(Gym)
 admin.site.register(Favourite)
 admin.site.register(RecentlySelectedExercise)
-admin.site.register(ExercisePlan)
+admin.site.register(UserPlan)
+admin.site.register(Queries)

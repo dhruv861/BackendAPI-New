@@ -2,12 +2,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from .serializers import *
-# from api.serializers import ExerciseSerializer
 from django.contrib.auth import authenticate
 from .renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import GenericAPIView
+from core.models import CustomUser
 import random
 
 # Generate Token Manually
@@ -56,6 +56,19 @@ class UserProfileView(APIView):
         serializer = UserProfileSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class UpdateProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self,request):
+        if True:
+            user = request.user
+            user.name = request.data["name"]
+            user.age = request.data["age"]
+            user.height = request.data["height"]
+            user.weight = request.data["weight"]
+            user.save()
+            return Response({"success": "Profile Updated Successfully"})
+        else:
+            return Response({"error":"Authorization Failed"}, status=status.HTTP_404_NOT_FOUND)
 
 class UserChangePasswordView(APIView):
     renderer_classes = [UserRenderer]

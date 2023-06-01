@@ -17,8 +17,7 @@ urlpatterns = [
     path('workshops/rooms/', AllRooms.as_view()),
     path('workshops/room-code/<role>/<roomId>',GetRoomCode.as_view()),
     path('exercises/exercise-plan/generate/', ExercisePlanGeneratorAPIView.as_view(), name='exercise-plan-generate'),
-
-    # path('favourites/remove/',remove_from_fav)
+    path('queries/',PostQueries.as_view())
 ]
 
 # urlpatterns += router.urls

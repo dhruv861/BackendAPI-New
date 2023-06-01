@@ -4,7 +4,7 @@ import uuid
 import datetime
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from core.models import Exercise,CustomUser,RecentlySelectedExercise,ExercisePlan
+from core.models import Exercise,CustomUser,RecentlySelectedExercise,UserPlan,Queries
 import json
 from .serializers import ExerciseSerializer, BodyPartSerializer,WorkshopSerializer
 from rest_framework import generics
@@ -13,6 +13,8 @@ from django_filters import rest_framework as filters
 import httpx
 from Workshops.models import Workshop
 import random
+from rest_framework import status
+
 
 @api_view(["GET"])
 def index(request):
@@ -10828,22 +10830,46 @@ class ExercisePlanGeneratorAPIView(APIView):
         return selected_exercise
 
 
-class ExercisePlanByUser(APIView):
+class PlanByUser(APIView):
     def post(self,request):
-        exercise_plan_json = json.dumps(request.data.get("plan"))
+        plan_json = json.dumps(request.data.get("plan"))
 
-        if ExercisePlan.objects.filter(user=request.user).exists():
-            exercise_plan = ExercisePlan.objects.get(user=request.user)
-            exercise_plan.plan = exercise_plan_json
-            exercise_plan.save()
-            return Response("Exercise Plan Updated and Saved")
+        if UserPlan.objects.filter(user=request.user).exists():
+            if (request.GET.get("plan_type") == "exercise"):
+                plan = UserPlan.objects.get(user=request.user)
+                plan.exercise_plan = plan_json
+                plan.save()
+                return Response("Exercise Plan Updated and Saved")
+            if(request.GET.get("plan_type")=="meal"):
+                plan = UserPlan.objects.get(user=request.user)
+                plan.meal_plan = plan_json
+                plan.save()
+                return Response("Meal Plan Updated and Saved")
         else:
-            ExercisePlan.objects.create(user=request.user, plan=exercise_plan_json)
-            return Response("Exercise Plan Saved")
+            if (request.GET.get("plan_type") == "exercise"):
+                UserPlan.objects.create(user=request.user, exercise_plan=plan_json)
+                return Response("Exercise Plan Saved")
+            if (request.GET.get("plan_type") == "meal"):
+                UserPlan.objects.create(user=request.user, meal_plan=plan_json)
+                return Response("Meal Plan Saved")
+
 
     def get(self,request):
 
-        if ExercisePlan.objects.filter(user=request.user).exists():
-            exercise_plan = ExercisePlan.objects.get(user=request.user)
-            response = json.loads(exercise_plan.plan)
-            return Response(response)
+        if UserPlan.objects.filter(user=request.user).exists():
+            user_plan = UserPlan.objects.get(user=request.user)
+            exercise_plan = ""
+            meal_plan = ""
+            if(user_plan.exercise_plan):
+                exercise_plan = json.loads(user_plan.exercise_plan)
+            if(user_plan.meal_plan):
+                meal_plan = json.loads(user_plan.meal_plan)
+            return Response({"exercise":exercise_plan,"meal":meal_plan})
+        else:
+            return Response({"error":"No Exercise Plan"})
+
+class PostQueries(APIView):
+    def post(self,request):
+        data = request.data
+        Queries.objects.create(name=data["name"],email=data["email"],phone=data["phone"],subject=data["subject"],message=data["message"])
+        return Response("Query Submitted.Our Team Will get Back to you shortly.")
