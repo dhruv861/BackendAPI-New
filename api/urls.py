@@ -7,7 +7,6 @@ from rest_framework import routers
 # router.register(r'exercises/', exercises,basename=)
 
 urlpatterns = [
-    path('index/', index),
     path('exercises/', AllExerciseAPIView.as_view()),
     path('exercises/bodyparts/',BodyPartsAPIView.as_view()),
     path('exercises/bodyparts/<bodypart>', FilterBodyPartAPIView.as_view()),

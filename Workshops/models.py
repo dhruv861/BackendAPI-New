@@ -7,6 +7,8 @@ class Workshop(models.Model):
     name= models.CharField(max_length=100)
     description = models.TextField()
     enabled = models.BooleanField(default=False)
+    day = models.CharField(max_length=10)
+    time = models.CharField(max_length=10)
     image = models.URLField()
 
     def __str__(self):
