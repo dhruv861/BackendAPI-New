@@ -4,8 +4,7 @@ from .models import *
 
 admin.site.register(Exercise)
 admin.site.register(CustomUser)
-admin.site.register(Gym)
-admin.site.register(Favourite)
+
 admin.site.register(RecentlySelectedExercise)
 admin.site.register(UserPlan)
 admin.site.register(Queries)

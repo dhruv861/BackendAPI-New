@@ -102,7 +102,7 @@ class GetRoomCode(APIView):
     def get(self,request,role,roomId):
         token=getManagementToken()
         r= httpx.post(f"https://api.100ms.live/v2/room-codes/room/{roomId}/role/{role}" ,headers={"Authorization": f'Bearer {token}'})
-        print(r.json())
+        # print(r.json())
         return Response(r.json())
 
 
