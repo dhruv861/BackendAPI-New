@@ -39,10 +39,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class UserLoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255)
-    # favourites = ExerciseSerializer(read_only=True, many=True)
+    favourites = ExerciseSerializer(read_only=True, many=True)
     class Meta:
         model = CustomUser
-        fields = ['email', 'password']
+        fields = ['email', 'password',"favourites"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

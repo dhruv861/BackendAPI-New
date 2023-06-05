@@ -79,21 +79,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-class Favourite(models.Model):
-    user = models.ForeignKey(CustomUser,on_delete=models.PROTECT,unique=True)
-    exercise=models.ManyToManyField(Exercise)
-
-    def __str__(self):
-        return self.user.email
-
-class Gym(models.Model):
-    Name = models.CharField(max_length=100)
-    City = models.CharField(max_length=100)
-    Address = models.TextField()
-    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.Name
 
 class RecentlySelectedExercise(models.Model):
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
